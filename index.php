@@ -18,4 +18,4 @@ spl_autoload_register(function($class) {
     include_once(str_replace('\\', '/', $class) . '.php');
 });
  
-new Banner;
+new Banner(new Config);
