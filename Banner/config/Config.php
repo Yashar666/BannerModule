@@ -6,22 +6,11 @@
 
 namespace Banner\Config;
 
-class Config implements IConfig {
+interface Config {
 
-	public const ENV_FILE = '~/.env';
+	public const CONFIG_FILE = '';
 
-	public function __construct()
-	{
+	public function set(string $data): void;
 
-	}
-
-	public function setConfig(): void
-	{
-
-	}
-
-	public function getConfig(): string
-	{
-
-	}
+	public function get(string $data): string;	
 }

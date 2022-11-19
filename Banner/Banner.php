@@ -6,14 +6,21 @@
 
 namespace Banner;
 
-use Config;
+use Banner\Config\Config;
 
 class Banner {
 
-	private array $config; 
-
-	public function __construct(IConfig $conf)
+	public function __construct(array $providers)
 	{
-		$this->config = $conf;
+		$this->setProviders($providers);
+	}
+
+	private function setProviders(array $providers): void
+	{
+		if($providers) {
+			foreach ($providers as $provider) {
+				$this->{strtolower($provider->name)} = new $provider->value;
+			}
+		}
 	}
 }
