@@ -13,6 +13,10 @@ class Banner {
 	public function __construct(array $providers)
 	{
 		$this->setProviders($providers);
+		$this->saveInDb();
+		/**
+			@TODO cache image
+		*/
 		$this->showImage();
 	}
 
@@ -22,6 +26,15 @@ class Banner {
 			foreach ($providers as $provider) {
 				$this->{strtolower($provider->name)} = new $provider->value;
 			}
+		}
+	}
+
+	protected function saveInDb()
+	{
+		if(!$this->session->has('user')) {
+			// @todo database -> create record
+		} else {
+			// @todo  database update record
 		}
 	}
 
