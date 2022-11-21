@@ -7,11 +7,16 @@
 namespace Banner;
 
 class Banner {
-
 	/**
 	* @var Banner\Config\Config $config
+	* @var Banner\Database\Database $model
+	* @var Banner\Session\Session $session
+	* @var Banner\Session\Session $cookie
 	*/
 
+	/**
+	* Set all proccess
+	*/
 	public function __construct()
 	{
 		$this->config = Provider::get('CONFIG');
@@ -22,6 +27,10 @@ class Banner {
 		$this->showImage();
 	}
 
+	/**
+	* Insert or update data record
+	* @return void
+	*/
 	protected function changeData(): void
 	{
 		$ip = Helper::ip();
@@ -35,6 +44,10 @@ class Banner {
 		}
 	}
 
+	/**
+	* Render image banner
+	* @return void
+	*/
 	protected function showImage(): void
 	{
 		$image = Helper::realPath($this->config->get('IMG_URL'));

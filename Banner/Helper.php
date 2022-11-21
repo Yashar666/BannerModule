@@ -9,7 +9,10 @@ namespace Banner;
 use Exception;
 
 class Helper {
-
+	/**
+	* Standard image types
+	* @var string[] $imgTypes
+	*/
 	private static array $imgTypes = [
 		'image/png',
 		'image/jpeg',
@@ -18,12 +21,21 @@ class Helper {
 		'image/webp',
 		'image/gif',
 	];
-	
+
+	/**
+	* Get real path for file
+	* @param string $path
+	* @return string
+	*/
 	public static function realPath(string $path): string
 	{
 		return realpath(str_replace('~', getenv('DOCUMENT_ROOT'), $path));
 	}
 
+	/**
+	* Get client real IP address
+	* @return string
+	*/
 	public static function ip(): string
 	{
 		$ip = '127.0.0.1';
@@ -47,27 +59,50 @@ class Helper {
 		return $ip;
 	}
 
+	/**
+	* Get user agent - browser client
+	* @return string
+	*/
 	public static function userAgent(): string
 	{
 		return $_SERVER['HTTP_USER_AGENT'] ?? '';
 	}
 
+	/**
+	* Get call page banner
+	* @return string
+	*/
 	public static function currentPage(): string
 	{
 		return isset($_SERVER['HTTP_REFERER']) ? basename($_SERVER['HTTP_REFERER']) : '';
 	}
 
+	/**
+	* Get real path for file
+	* @param string $path
+	* @return string
+	*/
 	public static function date(): string
 	{
 		return date('Y-m-d H:i:s');
 	}
 
+	/**
+	* Check file for image
+	* @param string $mime
+	* @return bool
+	*/
 	public static function isImage(string $mime): bool
 	{
 		return in_array($mime, static::$imgTypes);
 	}
 
-	public static function readFile(string $file)
+	/**
+	* Read file safely
+	* @param string $file
+	* @return string
+	*/
+	public static function readFile(string $file): string
 	{
 		$file = self::realPath($file);
 		if(is_file($file)) {

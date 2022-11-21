@@ -18,10 +18,20 @@ class PdoDatabase implements Database {
     * @var string $pass
     * @var string $prefix
     */
+
+    /**
+    * Check Cookie has or not
+    * @var PDO $conn
+    * @var string $columns
+    * @var string $tableName
+    */
     private PDO $conn;
     private string $columns;
     private string $tableName;
- 
+
+    /**
+    * Connect & set params proccess
+    */
     public function __construct()
     {
         $this->config = Provider::get('CONFIG');
@@ -29,7 +39,12 @@ class PdoDatabase implements Database {
         $this->connect();
     }
 
-    // Изменение данных в базе
+    /**
+    * Update record
+    * @param string[] $where
+    * @param string[] $options
+    * @return bool
+    */
     public function update(array $where = [], array $options = []): bool
     {
         if (empty($options) || empty($where)) {
@@ -56,7 +71,11 @@ class PdoDatabase implements Database {
         }
     }
 
-    // Запись данных в базу
+    /**
+    * Insert data to database
+    * @param string[] $options
+    * @return bool
+    */
     public function insert(array $options = []): bool
     {
         if (empty($options)) {
@@ -64,15 +83,12 @@ class PdoDatabase implements Database {
         }
         
         $fields = implode(', ', array_keys($options));
-        
         $values = '';
-
         foreach ($options as $option) {
             $values .= $this->conn->quote($option) . ', ';
         }
-
         $values = rtrim($values, ', ');
-        
+
         try {
             $this->conn->query('INSERT INTO ' . $this->getTableName() . ' (' . $fields . ') VALUES (' . $values . ')');
             return $this->conn->lastInsertId();
@@ -81,12 +97,23 @@ class PdoDatabase implements Database {
         }
     }
 
-    public function delete(int $id): int
+    /**
+    * Delete record
+    * @param int $id
+    * @return bool
+    */
+    public function delete(int $id): bool
     {
-        //
+        /**
+        * @todo Delete record proccess
+        */
     }
 
-    // Определяем Таблицу с которым работаем
+    /**
+    * Set table name which uses
+    * @param string $tableName
+    * @return void
+    */
     public function setTable(string $tableName): void
     {
         if (isset($tableName) && (empty($this->tableName) || $this->tableName != $tableName)) {
@@ -95,6 +122,10 @@ class PdoDatabase implements Database {
         }
     }
 
+    /**
+    * Set database credentials
+    * @return void
+    */
     private function setParams(): void
     {
         $this->host = $this->config->get('DB_HOST');
@@ -104,6 +135,10 @@ class PdoDatabase implements Database {
         $this->prefix = $this->config->get('DB_PREFIX');
     }
 
+    /**
+    * Connect to database with PDO
+    * @return void
+    */
     private function connect(): void
     {
         try {
@@ -116,24 +151,28 @@ class PdoDatabase implements Database {
         }
     }
 
-    // Сформируем имя таблице 
+    /**
+    * Get table real name
+    * @return string
+    */
     private function getTableName(): string
     {
         return $this->tableName ? ($this->prefix ? $this->prefix . '_' . $this->tableName : $this->tableName) : '';
     }
 
-    // Определяем всех имя полей
+    /**
+    * Set all fields names
+    * @return void
+    */
     private function setColumns(): void
     {
         $table = $this->getTableName();
         if ($table) {
             $stmt = $this->conn->query('DESCRIBE ' . $table);
             $this->columns = '';
-
             foreach ($stmt as $field) {
                 $this->columns .= $field['Field'] . ', '; 
             }
-
             $this->columns = rtrim($this->columns, ', ');
         }
     }

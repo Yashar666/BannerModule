@@ -10,13 +10,19 @@ use Banner\Provider;
 use Banner\Helper;
 
 class Model {
- 
+    /**
+    * Set database table for use
+    */
     public function __construct()
     {
         $this->db = Provider::get('DB');
         $this->db->setTable('users');
     }
 
+    /**
+    * Add data to save in table
+    * @return int
+    */
     public function add(): int
     {
         $insertID = $this->db->insert([
@@ -29,6 +35,12 @@ class Model {
         return $insertID;
     }
 
+    /**
+    * Update data in table
+    * @param string $ip
+    * @param string $page
+    * @return void
+    */
     public function update(string $ip, string $page): void
     {
         $this->db->update([

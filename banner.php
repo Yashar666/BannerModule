@@ -18,4 +18,5 @@ spl_autoload_register(function($class) {
 	include_once(str_replace('\\', '/', $class) . '.php');
 });
 
+// Run banner application
 new Banner;
