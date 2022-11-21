@@ -6,43 +6,41 @@
 
 namespace Banner;
 
-use Banner\Config\Config;
-
 class Banner {
 
-	public function __construct(array $providers)
+	/**
+	* @var Banner\Config\Config $config
+	*/
+
+	public function __construct()
 	{
-		$this->setProviders($providers);
-		$this->saveInDb();
-		/**
-			@TODO cache image
-		*/
+		$this->config = Provider::get('CONFIG');
+		$this->model = Provider::get('MODEL');
+		$this->session = Provider::get('SESSION');
+		$this->cookie = Provider::get('COOKIE');
+		$this->changeData();
 		$this->showImage();
 	}
 
-	private function setProviders(array $providers): void
+	protected function changeData(): void
 	{
-		if($providers) {
-			foreach ($providers as $provider) {
-				$this->{strtolower($provider->name)} = new $provider->value;
+		$ip = Helper::ip();
+		$page = Helper::currentPage();
+		if(!$this->session->has('user.' . $page)) {
+			if($this->model->add()) {
+				$this->session->set('user.' . $page, $ip);
 			}
-		}
-	}
-
-	protected function saveInDb()
-	{
-		if(!$this->session->has('user')) {
-			// @todo database -> create record
 		} else {
-			// @todo  database update record
+			$this->model->update($ip, $page);
 		}
 	}
 
 	protected function showImage(): void
 	{
 		$image = Helper::realPath($this->config->get('IMG_URL'));
-		$imageInfo = getimagesize($image);
+		$imageInfo = $this->cookie->has('banner_mime') ? json_decode($this->cookie->get('banner_mime'), true) : getimagesize($image);
 		if($imageInfo && !empty($imageInfo['bits']) && Helper::isImage($imageInfo['mime'])) {
+			$this->cookie->set('banner_mime', json_encode($imageInfo));
 			header("Content-type: {$imageInfo['mime']}");
 			readfile($image);
 		}

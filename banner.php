@@ -6,11 +6,7 @@
 // Turn strick mode 
 declare(strict_types = 1);
 
-use Banner\{
-	Banner,
-	Config\EnvConfig,
-	Providers
-};
+use Banner\Banner;
 
 // Turn Errors
 ini_set('display_errors', '1');
@@ -22,4 +18,4 @@ spl_autoload_register(function($class) {
 	include_once(str_replace('\\', '/', $class) . '.php');
 });
 
-new Banner(Providers::cases());
+new Banner;

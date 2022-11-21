@@ -39,6 +39,6 @@ class EnvConfig implements Config {
 
 	public function get(string $key): string
 	{
-		return getenv($key);
+		return getenv($key) ?? '';
 	}
 }

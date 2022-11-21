@@ -25,6 +25,6 @@ class PhpSession implements Session {
 
 	public function get(string $key): string
 	{
-		return isset($_SESSION[$key]) ?? '';
+		return $_SESSION[$key] ?? '';
 	}
 }
