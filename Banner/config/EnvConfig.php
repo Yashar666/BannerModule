@@ -33,7 +33,7 @@ class EnvConfig implements Config {
 	{
 		$arrayData = explode("\n", $envFile);
 
-		if($arrayData) {
+		if($arrayData && is_array($arrayData)) {
 			foreach($arrayData as $data) {
 				$data = trim($data);
 				if($data) {

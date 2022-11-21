@@ -167,10 +167,12 @@ class PdoDatabase implements Database {
     {
         $table = $this->getTableName();
         if ($table) {
-            $stmt = $this->conn->query('DESCRIBE ' . $table);
+            $describe = $this->conn->query('DESCRIBE ' . $table);
             $this->columns = '';
-            foreach ($stmt as $field) {
-                $this->columns .= $field['Field'] . ', '; 
+            if(is_array($describe)) {
+                foreach ($describe as $field) {
+                    $this->columns .= $field['Field'] . ', ';
+                }
             }
             $this->columns = rtrim($this->columns, ', ');
         }
