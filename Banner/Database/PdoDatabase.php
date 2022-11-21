@@ -20,7 +20,6 @@ class PdoDatabase implements Database {
     */
 
     /**
-    * Check Cookie has or not
     * @var PDO $conn
     * @var string $columns
     * @var string $tableName
